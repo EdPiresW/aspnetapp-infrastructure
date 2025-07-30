@@ -23,7 +23,7 @@ resource "aws_subnet" "subnet_a" {
   vpc_id                  = aws_vpc.aspnetapp_vpc.id
   cidr_block              = "10.0.1.0/24"
   availability_zone       = "${var.aws_region}a"
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
 
   tags = {
     Name = var.subnet_a_name
@@ -35,7 +35,7 @@ resource "aws_subnet" "subnet_b" {
   vpc_id                  = aws_vpc.aspnetapp_vpc.id
   cidr_block              = "10.0.2.0/24"
   availability_zone       = "${var.aws_region}c"
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
 
   tags = {
     Name = var.subnet_c_name
@@ -77,7 +77,6 @@ resource "aws_security_group" "aspnetapp_sg_alb" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -85,7 +84,7 @@ resource "aws_security_group" "aspnetapp_sg_alb" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["10.0.1.0/24"]
   }
 
   tags = {

@@ -18,7 +18,7 @@ resource "aws_internet_gateway" "aspnetapp_igw" {
   }
 }
 
-# Create the public subnet A - Availability Zone 1
+# Create the private subnet A - Availability Zone 1
 resource "aws_subnet" "subnet_a" {
   vpc_id                  = aws_vpc.aspnetapp_vpc.id
   cidr_block              = "10.0.1.0/24"
@@ -30,7 +30,7 @@ resource "aws_subnet" "subnet_a" {
   }
 }
 
-# Create the public subnet B - Availability Zone 2
+# Create the private subnet B - Availability Zone 2
 resource "aws_subnet" "subnet_b" {
   vpc_id                  = aws_vpc.aspnetapp_vpc.id
   cidr_block              = "10.0.2.0/24"

@@ -3,14 +3,14 @@ name: CI Build and Test with Docker
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - '**.cs'
       - '**.csproj'
       - 'Dockerfile'
   pull_request:
     branches:
-      - main
+      - master
     paths:
       - '**.cs'
       - '**.csproj'

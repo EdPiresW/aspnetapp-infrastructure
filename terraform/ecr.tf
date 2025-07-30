@@ -1,3 +1,4 @@
+# AWS ECR respository creation
 resource "aws_ecr_repository" "aspnetapp_repository" {
   name                 = var.ecr_repo_name
   image_tag_mutability = "MUTABLE"
@@ -7,6 +8,7 @@ resource "aws_ecr_repository" "aspnetapp_repository" {
   }
 }
 
+# AWS ECR respository lifecycle
 resource "aws_ecr_lifecycle_policy" "aspnetapp_lifecycle" {
   repository = aws_ecr_repository.aspnetapp_repository.name
   policy = jsonencode({

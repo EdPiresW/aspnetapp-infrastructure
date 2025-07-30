@@ -1,11 +1,11 @@
 # VPC creation
 resource "aws_vpc" "aspnetapp_vpc" {
-  cidr_block           = "10.0.0.0/16" # VPC IPs
+  cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
 
   tags = {
-    Name = "aspnetapp-vpc"
+    Name = var.vpc_name
   }
 }
 
@@ -14,40 +14,40 @@ resource "aws_internet_gateway" "aspnetapp_igw" {
   vpc_id = aws_vpc.aspnetapp_vpc.id
 
   tags = {
-    Name = "aspnetapp-igw"
+    Name = var.vpc_name
   }
 }
 
-# Criar a Subnet pública - Zona de disponibilidade 1
+# Create the public subnet A - Availability Zone 1
 resource "aws_subnet" "subnet_a" {
   vpc_id                  = aws_vpc.aspnetapp_vpc.id
   cidr_block              = "10.0.1.0/24"
-  availability_zone       = "us-west-1a"
+  availability_zone       = "${var.aws_region}a"
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "aspnetapp-subnet-a"
+    Name = var.subnet_a_name
   }
 }
 
-# Criar a Subnet pública - Zona de disponibilidade 2
+# Create the public subnet B - Availability Zone 2
 resource "aws_subnet" "subnet_b" {
   vpc_id                  = aws_vpc.aspnetapp_vpc.id
   cidr_block              = "10.0.2.0/24"
-  availability_zone       = "us-west-1c"
+  availability_zone       = "${var.aws_region}c"
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "aspnetapp-subnet-c"
+    Name = var.subnet_c_name
   }
 }
 
-# Criar a Tabela de Roteamento para as subnets públicas
+# Create the route table for the public subnets
 resource "aws_route_table" "aspnetapp_route_table" {
   vpc_id = aws_vpc.aspnetapp_vpc.id
 
   route {
-    cidr_block = "0.0.0.0/0" # Rota para a internet
+    cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.aspnetapp_igw.id
   }
 
@@ -56,7 +56,7 @@ resource "aws_route_table" "aspnetapp_route_table" {
   }
 }
 
-# Associar a Tabela de Roteamento com as Subnets públicas
+# Associate the route table with the public subnets
 resource "aws_route_table_association" "subnet_a_association" {
   subnet_id      = aws_subnet.subnet_a.id
   route_table_id = aws_route_table.aspnetapp_route_table.id
@@ -67,9 +67,9 @@ resource "aws_route_table_association" "subnet_b_association" {
   route_table_id = aws_route_table.aspnetapp_route_table.id
 }
 
-# Criar um Security Group para a aplicação
+# Create a Security Group for the application
 resource "aws_security_group" "aspnetapp_sg_alb" {
-  name   = "aspnetapp_sg_alb"
+  name   = var.alb_sg_name
   vpc_id = aws_vpc.aspnetapp_vpc.id
 
   egress {
@@ -89,6 +89,6 @@ resource "aws_security_group" "aspnetapp_sg_alb" {
   }
 
   tags = {
-    Name = "aspnetapp-security-group"
+    Name = var.alb_sg_name
   }
 }

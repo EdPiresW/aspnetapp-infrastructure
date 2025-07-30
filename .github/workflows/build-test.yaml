@@ -1,4 +1,4 @@
-name: CI Build and Test with Docker
+name: Build and Test .NET Project
 
 on:
   push:
@@ -16,13 +16,31 @@ on:
       - '**.csproj'
       - 'Dockerfile'
 
+# TODO: Enable pipeline
+# TODO: Need to create aplication files to add tests
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Build and Test via Dockerfile
-        run: docker build -t aspnet-sample .
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Run unit tests
+        run: dotnet test --no-build --verbosity normal
+
+      - name: Build Docker image
+        run: |
+          docker build -t my-app:latest .

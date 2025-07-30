@@ -20,6 +20,7 @@ resource "aws_iam_role" "ecs_task_execution" {
   })
 }
 
+# ECS taks definition
 resource "aws_ecs_task_definition" "aspnetapp_task_definition" {
   family                   = "aspnetapp-task"
   requires_compatibilities = ["FARGATE"]
@@ -45,7 +46,7 @@ resource "aws_ecs_task_definition" "aspnetapp_task_definition" {
 
 # ECS Service 
 resource "aws_ecs_service" "aspnetapp_ecs_service" {
-  name            = "aspnetapp_ecs_service"
+  name            = var.ecs_service_name
   cluster         = aws_ecs_cluster.aspnetapp_ecs_cluster.name
   task_definition = aws_ecs_task_definition.aspnetapp_task_definition.arn
   desired_count   = 1
@@ -62,13 +63,12 @@ resource "aws_ecs_service" "aspnetapp_ecs_service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.blue_aspnetapp_target.arn
-    container_name   = "aspnetapp_ecs_service"
-    container_port   = 80
+    container_name   = var.ecs_service_name
+    container_port   = 8080
   }
   lifecycle {
     ignore_changes = [
-      load_balancer,
-      task_definition
+      load_balancer
     ]
   }
 }

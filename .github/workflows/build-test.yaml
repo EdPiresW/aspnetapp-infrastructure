@@ -3,14 +3,14 @@ name: Build and Test .NET Project
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - '**.cs'
       - '**.csproj'
       - 'Dockerfile'
   pull_request:
     branches:
-      - master
+      - main
     paths:
       - '**.cs'
       - '**.csproj'

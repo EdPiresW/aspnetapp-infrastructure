@@ -1,13 +1,14 @@
 # ALB Creation
 resource "aws_lb" "aspnetapp_lb" {
   name               = var.alb_name
-  internal           = false
+  internal           = true
   load_balancer_type = "application"
   security_groups    = [aws_security_group.aspnetapp_sg_alb.id]
   subnets            = [aws_subnet.subnet_a.id, aws_subnet.subnet_b.id]
 
   enable_deletion_protection       = false
   enable_cross_zone_load_balancing = true
+  drop_invalid_header_fields       = true
 
   tags = {
     Name = var.alb_name
@@ -48,7 +49,7 @@ resource "aws_lb_target_group" "green_aspnetapp_target" {
 resource "aws_lb_listener" "aspnetapp_lb_listiner" {
   load_balancer_arn = aws_lb.aspnetapp_lb.arn
   port              = 80
-  protocol          = "HTTP"
+  protocol          = "HTTPS"
 
   default_action {
     type             = "forward"
@@ -65,7 +66,7 @@ resource "aws_lb_listener" "aspnetapp_lb_listiner" {
 resource "aws_lb_listener" "test_listener" {
   load_balancer_arn = aws_lb.aspnetapp_lb.arn
   port              = 8080
-  protocol          = "HTTP"
+  protocol          = "HTTPS"
 
   default_action {
     type             = "forward"

@@ -1,6 +1,11 @@
 # ECS cluster criation
 resource "aws_ecs_cluster" "aspnetapp_ecs_cluster" {
   name = "aspnetapp-cluster"
+
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 }
 
 resource "aws_iam_role" "ecs_task_execution" {

@@ -3,7 +3,7 @@ name: Project lints
 on:
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   terraform:
